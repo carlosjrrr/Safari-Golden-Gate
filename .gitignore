@@ -1,0 +1,17 @@
+# Local development notes and generated release packages
+CUSTOMIZATION_PROGRESS.md
+dist/
+
+# Editor and operating-system files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Temporary and backup files
+*.log
+*.tmp
+*.bak
+*.backup
+*~

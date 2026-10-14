@@ -1,0 +1,87 @@
+/* Find bar  */
+
+@namespace xul "http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul";
+
+findbar {
+	position: relative;
+}
+
+/* Text on the bar. parts/toolbox.css gives the findbar the palette's
+ * --gnome-findbar-background but nothing set a colour to go with it, so the
+ * labels kept Firefox's own near-black: with a dark palette on a light desktop
+ * "Highlight All", "Match Case", "Match Diacritics" and "Whole Words" measured
+ * 1.3:1 on Firefox 153.
+ *
+ * The checkbox labels need naming individually. Setting a colour on `findbar`
+ * alone only reaches them by inheritance, and .checkbox-label carries its own
+ * declaration, which wins whatever the origin -- the same mechanism that kept
+ * the selected tab's title dark in parts/tabsbar.css. */
+findbar,
+findbar label,
+findbar description,
+findbar .findbar-find-status,
+findbar .found-matches,
+findbar checkbox,
+findbar .checkbox-label {
+	color: var(--gnome-toolbar-color) !important;
+}
+
+.findbar-container {
+	width: calc(100% - 42px);
+	height: auto !important;
+	padding: 6px !important;
+	display: flex;
+	justify-content: center;
+	position: relative;
+	flex-direction: row;
+}
+
+hbox[anonid="findbar-textbox-wrapper"] {
+	position: absolute;
+	right: calc(50vw - 36px);
+	transform: translate(50%, 0);
+	display: flex !important;
+}
+
+.findbar-find-status,
+.found-matches {
+	order: -1;
+	padding: 7px 0;
+}
+
+.findbar-find-status {
+	padding-left: 6px;
+	flex: 1;
+}
+
+.findbar-closebutton {
+	margin: 6px !important;
+	padding: 0 0 !important;
+	border-radius: 100px !important;
+}
+
+/* --themecore-button-hover-color and --themecore-button-active-color were never
+ * defined -- these two rules were the only mentions of either name in the
+ * tree. An undefined var() is invalid at computed-value time, so both
+ * declarations were dropped and the close button had no hover or press state
+ * at all. These are the names the rest of the theme uses for the same job. */
+.findbar-closebutton:hover {
+	background-color: var(--gnome-headerbar-button-hover-background) !important;
+}
+
+.findbar-closebutton:hover:active {
+	background-color: var(--gnome-headerbar-button-active-background) !important;
+}
+
+@media (max-width: 1100px) {
+	hbox[anonid="findbar-textbox-wrapper"] {
+		position: relative;
+		right: 0;
+		transform: none;
+	}
+
+	.findbar-find-status,
+	.found-matches {
+		order: 0;
+	}
+}

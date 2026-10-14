@@ -1,0 +1,242 @@
+/* Header bar's URL bar */
+
+@namespace xul "http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul";
+
+#urlbar {
+	--urlbar-height: 30.00px !important;
+}
+#urlbar, #searchbar {
+	font-size: 1.2em !important;
+	min-height: 28px !important;
+}
+/* Centre URL bar text input*/
+#urlbar-input {
+	transition: transform .1s linear;
+	transform: translateX(50%) translateY(-50%);
+	position: absolute;
+	top: 50%;
+	height: auto;
+	width: 50%;
+	text-align: center !important;
+}
+/* Unless text input is selected like safari*/
+#urlbar[focused] #urlbar-input {
+	position: absolute;
+	top: 50%;
+	transform: translateX(0) translateY(-50%);
+	transition: all .2s ease;
+	width: 100%;
+	text-align: left !important;
+}
+
+/* Center the URL bar */
+toolbarspring {
+	max-width: 10000px !important;
+}
+
+/* URL bar */
+#urlbar, #PopupSearchAutoComplete {
+	box-shadow: none !important;
+	background: var(--gnome-popover-background) !important;
+	border-radius: 8px !important;
+	opacity: 0.8 !important;
+	filter: saturate(0%) !important;
+	transition: opacity 0.4s !important;
+}
+#urlbar:hover,
+#urlbar[focused],
+#PopupSearchAutoComplete {
+	opacity: 1 !important;
+	filter: saturate(100%) !important;
+
+}
+.urlbar-background {
+	box-shadow: none !important;
+	border: 0 !important;
+	background: transparent !important;
+	border-radius: 8px !important;
+}
+
+#urlbar[breakout][breakout-extend] {
+	top: 9.5px !important;
+	width: var(--urlbar-width) !important;
+	z-index: 5 !important;
+	padding: 0 !important;
+}
+#urlbar[breakout][breakout-extend][open] {
+	height: auto !important;
+	max-height: unset !important;
+}
+#urlbar[breakout][breakout-extend] .urlbar-input-container {
+	height: 32px !important;
+	max-height: 32px !important;
+	padding: 0 !important;
+}
+
+#urlbar[breakout][breakout-extend][open] .urlbar-background {
+	box-shadow: var(--gnome-urlbar-box-shadow) !important;
+}
+
+/* URL bar results */
+.urlbarView {
+	background: transparent !important;
+	color: var(--gnome-toolbar-color) !important;
+	margin: 0 !important;
+	width: 100% !important;
+}
+
+/* ...and the colours Firefox paints the results from, which the rule above
+ * cannot reach. The row highlight, the separator and the chip inside the bar
+ * all come from --urlbarview-* / --urlbar-box-* on :root, every one of them a
+ * light-dark() pair. The palettes in custom/ are unconditional, so on a light
+ * desktop a dark palette got the light branch: a #e0e0e6 row and a white
+ * "Search with Google" chip sitting on a dark dropdown.
+ *
+ * Note the spelling. The colour tokens are --urlbarview-* with a lowercase v,
+ * while the metrics beside them are --urlbarView-* with a capital one. Custom
+ * properties are case-sensitive, so the two are unrelated names and only the
+ * lowercase set matters here. Read off Firefox 153 itself. */
+:root {
+	--urlbarview-background-color-selected: var(--gnome-popover-button-active-background) !important;
+	--urlbarview-background-color-hover: var(--gnome-popover-button-hover-background) !important;
+	--urlbarview-text-color-selected: var(--gnome-toolbar-color) !important;
+	--urlbarview-text-color-action: var(--themecore-panel-secondary-text) !important;
+	--urlbarview-separator-color: var(--gnome-popover-separator-color) !important;
+
+	/* The pill inside the address bar -- "Search with Google", a search-mode
+	 * chip. Its resting colour is light-dark(white, ...), so it was a white
+	 * lozenge on a dark bar. */
+	--urlbar-box-background-color: var(--gnome-popover-button-hover-background) !important;
+	--urlbar-box-background-color-hover: var(--gnome-popover-button-active-background) !important;
+	--urlbar-box-background-color-active: var(--gnome-popover-button-active-background) !important;
+	--urlbar-box-background-color-focus: var(--gnome-popover-button-active-background) !important;
+	--urlbar-box-text-color-hover: var(--gnome-toolbar-color) !important;
+}
+
+.urlbarView-body-outer {
+	max-height: 40vh !important;
+	overflow-x: auto;
+	padding: 0 8px !important;
+}
+
+.urlbarView-body-inner {
+	border: 0 !important;
+}
+
+.urlbarView-row-inner, .urlbarView-no-wrap  {
+	align-items: center !important;
+}
+.urlbarView-row-inner {
+	padding-block: 5px !important;
+	border-radius: 5px !important;
+}
+
+/* Search engines buttons */
+.search-one-offs {
+	margin-top: 6px !important;
+	margin-bottom: 2px !important;
+	padding: 8px !important;
+	background: var(--gnome-popover-background) !important;
+	/* --gnome-entry-border-color was never defined anywhere in the tree, so
+	 * this border was dropped as invalid. --gnome-popover-border-color is
+	 * the edge colour every palette actually declares. */
+	border-top: 1px solid var(--gnome-popover-border-color) !important;
+	border-radius: 0 0 5px 5px !important;
+}
+
+.searchbar-engine-one-off-item {
+	--toolbarbutton-active-background: transparent !important;
+	--toolbarbutton-hover-background: transparent !important;
+	-moz-appearance: none !important;
+	background: var(--gnome-button-background) !important;
+	box-shadow: var(--gnome-button-box-shadow) !important;
+	border: 1px solid var(--gnome-button-border-color) !important;
+	border-left-width: 0 !important;
+	border-bottom-color: var(--gnome-button-border-accent-color) !important;
+	padding: 0 2px !important;
+	min-height: 34px !important;
+	min-width: 34px !important;
+	margin: 0 !important;
+}
+.searchbar-engine-one-off-item:hover, .searchbar-engine-one-off-item[selected] {
+	background: var(--gnome-button-hover-background) !important;
+	color: unset !important;
+}
+.searchbar-engine-one-off-item:first-child {
+	border-radius: 5px 0 0 5px;
+	border-left-width: 1px !important;
+}
+.searchbar-engine-one-off-item.last-engine, .searchbar-engine-one-off-item:last-child {
+	border-radius: 0 5px 5px 0;
+}
+
+#urlbar-anon-search-settings-compact {
+	border-left-width: 1px !important;
+	border-bottom: 1px solid var(--gnome-button-border-accent-color) !important;
+	border-radius: 5px;
+	margin-left: 6px !important;
+}
+
+/* URL bar and Search bar */
+#urlbar[focused] .urlbar-textbox-container {
+	margin: -1px !important;
+}
+#searchbar > .searchbar-textbox[focused] .searchbar-search-button {
+	margin-left: -1px !important;
+}
+#searchbar > .searchbar-textbox[focused] .search-go-button {
+	margin-right: -1px !important;
+}
+
+/* URL bar and Search bar's icons */
+.urlbar-icon:hover,
+.urlbar-icon-wrapper:hover,
+.urlbar-icon[open],
+.urlbar-icon-wrapper[open],
+.urlbar-icon:hover:active,
+.urlbar-icon-wrapper:hover:active,
+.searchbar-search-button:hover .searchbar-search-icon,
+.searchbar-search-button[open] .searchbar-search-icon,
+.searchbar-search-button:hover:active .searchbar-search-icon {
+	background-color: transparent !important;
+	fill-opacity: 1 !important;
+}
+.urlbar-icon {
+	height: 16px !important;
+	width: 16px !important;
+	margin:auto !important;
+}
+.search-go-button:hover, .urlbar-go-button.urlbar-icon:hover{
+	background-color: var(--urlbar-box-hover-bgcolor) !important;
+}
+/* fix size of search arrow */
+.urlbar-page-action, .urlbar-go-button, .search-go-button {
+	padding: 1px !important;
+  }
+/* Fix for firefox v92 onwards that changed icon size on MacOS*/
+.urlbar-page-action {
+padding: inherit !important;
+}
+
+/* Extention mod to hide when text is selected.*/
+#identity-box.extensionPage {
+	height: 32px;
+	bottom: 2px;
+}
+.searchbar-search-button[open] #identity-box.extensionPage #identity-permission-box,
+.searchbar-search-button:hover:active #identity-box.extensionPage #identity-permission-box,
+ #identity-box.extensionPage #identity-permission-box,
+#urlbar[usertyping] #identity-box.extensionPage #identity-permission-box,
+#urlbar:is([focused], [open])  #identity-box.extensionPage #identity-permission-box{
+	visibility: collapse;
+}
+#urlbar[focused] #identity-box[pageproxystate="valid"].extensionPage > .identity-box-button{
+	background-color: transparent !important;
+}
+#urlbar[focused] #identity-box[pageproxystate="valid"].extensionPage #identity-icon-box #identity-icon {
+	list-style-image: url(chrome://global/skin/icons/search-glass.svg) !important;
+}
+#urlbar[focused] #identity-box[pageproxystate="valid"].extensionPage #identity-icon-box #identity-icon-label{
+	display:none !important;
+}
+/* extension mod end */

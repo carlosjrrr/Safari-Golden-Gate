@@ -1,0 +1,155 @@
+/* Toolbox, a container for all toolbars (toolbox#navigator-toolbox):
+ * - menu bar (toolbar#toolbar-menubar)
+ * - tab bar (toolbar#TabsToolbar)
+ * - header bar (toolbar#nav-bar)
+ * - bookmark bar (toolbar#PersonalToolbar)
+ * - add-ons can add their own toolbars (toolbar) */
+
+@namespace xul "http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul";
+
+/* Firefox's "attention" accent. It paints the matching substring in the
+ * address-bar results (the <strong> in each row), the attention dot on a
+ * toolbar button, and -- via --download-progress-fill-color -- the downloads
+ * progress bar. Its default is light-dark(oklch(55% 0.24 260), ...), a blue
+ * that no palette ever changed, so every theme highlighted search matches in
+ * Firefox blue. parts/downloads.css sets the progress bar directly because it
+ * also has to reach the Library and about:downloads; this is the root token
+ * everything else reads. */
+:root {
+	--toolbarbutton-icon-fill-attention: var(--theme-primary-color) !important;
+
+	/* Links in the chrome window. Found with the Browser Toolbox's own engine
+	 * (InspectorUtils.getMatchingCSSRules): the matching substring in an
+	 * address-bar result is painted by
+	 *   .urlbarView-row:not([selected]) & { color: var(--link-color) }
+	 * at view-proton.css:849 -- not by any accent token, which is why setting
+	 * those changed nothing. --link-color defaults to --color-blue-60, measured
+	 * 2.3:1 against a dark palette's result row. The same token colours
+	 * "Manage bookmarks..." on the empty bookmarks toolbar.
+	 *
+	 * parts/panels.css already sets this inside panels and parts/in-content.css
+	 * for about: pages; this is the window itself, so all three agree. */
+	--link-color: var(--theme-primary-color) !important;
+	--link-color-hover: var(--theme-primary-color-hover) !important;
+}
+
+/* Toolbox colors */
+#navigator-toolbox {
+	border: 0 !important;
+	background: none !important;
+}
+
+
+.toolbarbutton-icon {
+	color: var(--gnome-toolbar-color);
+	fill: var(--gnome-toolbar-color);
+}
+
+#nav-bar,
+#PersonalToolbar,
+#toolbar-menubar {
+	border: 0 !important;
+	/* !important: Firefox's own toolbar colour is author-origin, which beats a
+	 * plain user-sheet declaration — bookmark labels went near-black whenever
+	 * the OS mode and the palette disagreed (e.g. dark colour theme, light OS). */
+	color: var(--gnome-toolbar-color) !important;
+	background: var(--gnome-toolbar-background) !important;
+	border-bottom: none !important;
+}
+
+#TabsToolbar {
+	border: 0 !important;
+	background: var(--gnome-tabstoolbar-background) !important;
+	border-bottom: 1px solid var(--gnome-toolbar-border-color) !important;
+	box-shadow: inset 0 1px var(--gnome-toolbar-border-color) !important;
+}
+
+findbar {
+	border: 0 !important;
+	background: var(--gnome-findbar-background) !important;
+	border-bottom: 1px solid var(--gnome-toolbar-border-color) !important;
+}
+
+#nav-bar:-moz-window-inactive,
+#PersonalToolbar:-moz-window-inactive,
+#toolbar-menubar:-moz-window-inactive,
+#TabsToolbar:-moz-window-inactive,
+findbar:-moz-window-inactive {
+	background: var(--gnome-inactive-toolbar-background) !important;
+}
+
+#navigator-toolbox:-moz-window-inactive label,
+#navigator-toolbox:-moz-window-inactive image,
+#downloads-indicator-anchor:-moz-window-inactive,
+findbar:-moz-window-inactive image:not(#hack),
+findbar:-moz-window-inactive label,
+#viewButton:-moz-window-inactive dropmarker {
+	opacity: 0.7 !important;
+}
+
+#toolbar-menubar:not([inactive=true]) {
+	margin-bottom: 0 !important;
+}
+
+#PersonalToolbar {
+	padding: 2px 4px 0 4px !important;
+	height: 32px !important;
+}
+
+/* Overrides: Remove border below the menu bar / above the header bar */
+#TabsToolbar:not([collapsed="true"])+#nav-bar {
+	border-top-width: 0 !important;
+}
+
+#navigator-toolbox::after {
+	border-bottom-width: 0 !important;
+}
+
+/* Reorder toolbars */
+#navigator-toolbox #nav-bar,
+findbar {
+	order: 0;
+}
+
+#navigator-toolbox #PersonalToolbar {
+	order: 1;
+}
+
+#navigator-toolbox #TabsToolbar {
+	order: 2;
+}
+
+#navigator-toolbox toolbar {
+	order: 10;
+}
+
+#navigator-toolbox #TabsToolbar {
+	order: 100;
+}
+
+/* Overrides: Don't shift other toolbars on tab drag and drop */
+#TabsToolbar[movingtab] {
+	padding-bottom: 0 !important;
+}
+
+#TabsToolbar[movingtab]>#tabbrowser-tabs {
+	padding-bottom: 0 !important;
+	margin-bottom: 0 !important;
+}
+
+#TabsToolbar[movingtab]+#nav-bar {
+	margin-top: 0 !important;
+}
+
+/* bookmark-item */
+toolbarbutton.bookmark-item {
+	padding: 0 4px !important;
+	margin: 0 2px !important;
+	border-radius: 3px !important;
+	max-height: 20px !important;
+}
+
+/* Fix reload button animation overlap with icon */
+#reload-button:not([displaystop])>.toolbarbutton-animatable-box>.toolbarbutton-animatable-image {
+	animation-duration: 0s !important;
+}

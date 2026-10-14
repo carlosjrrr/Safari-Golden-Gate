@@ -1,0 +1,1302 @@
+/*
+ * Personal ThemeCore customizations
+ *
+ * This file is imported last by userChrome.css so that personal changes stay
+ * separate from the upstream theme.
+ */
+
+/* Window controls on the right: Minimize, Maximize/Restore, Close. */
+@media (-moz-platform: windows) {
+	:root {
+		--personal-window-control-size: 12px;
+		--personal-window-control-gap: 7px;
+		/* Complete occupied area: controls, container, right edge and safety gap. */
+		--personal-window-controls-reserved-width: 84px;
+	}
+
+	/* 12 px artwork with a 7 px visual gap between adjacent controls. */
+	#TabsToolbar .titlebar-button {
+		margin: 0 !important;
+		padding: 1px calc(var(--personal-window-control-gap) / 2) !important;
+	}
+
+	#TabsToolbar .titlebar-button > .toolbarbutton-icon {
+		width: var(--personal-window-control-size) !important;
+		height: var(--personal-window-control-size) !important;
+	}
+
+	:root:not([inFullscreen]) #TabsToolbar .titlebar-buttonbox-container,
+	:root:not([inFullscreen]) #TabsToolbar-buttonbox-container {
+		position: fixed !important;
+		top: 16px !important;
+		left: auto !important;
+		right: 8px !important;
+		z-index: 10 !important;
+	}
+
+	:root[sizemode="maximized"] #TabsToolbar .titlebar-buttonbox {
+		position: static !important;
+		top: auto !important;
+		left: auto !important;
+		right: auto !important;
+	}
+
+	/* Restore the conventional Windows order. */
+	#TabsToolbar .titlebar-button.titlebar-close {
+		order: 1 !important;
+	}
+
+	/* Reserve room for the controls without shifting the navigation buttons. */
+	#nav-bar {
+		padding-left: 10px !important;
+		padding-right: var(--personal-window-controls-reserved-width) !important;
+	}
+}
+
+/* Keep the exit-fullscreen control aligned to the right as well. */
+:root[tabsintitlebar][inFullscreen] #window-controls {
+	position: fixed !important;
+	left: auto !important;
+	right: 2px !important;
+	top: 16px !important;
+	z-index: 10 !important;
+}
+
+/*
+ * Toolbar interaction surfaces
+ *
+ * ThemeCore paints hover/open/pressed feedback on the outer toolbarbutton,
+ * while current Firefox also paints its own inner icon surface. Keep the
+ * native inner surface for later customization and remove only ThemeCore's
+ * outer card. Close controls are explicitly excluded.
+ */
+#nav-bar {
+	--gnome-headerbar-button-hover-background: transparent !important;
+	--gnome-headerbar-button-active-background: transparent !important;
+}
+
+#nav-bar toolbarbutton:not(.titlebar-button):not(.close-icon):is(:hover, :active, [open], [checked]) {
+	background: transparent !important;
+	background-color: transparent !important;
+	background-image: none !important;
+	box-shadow: none !important;
+	outline: 0 !important;
+}
+
+/* Keep the address-bar search magnifier background-free in every state. */
+.searchmode-switcher {
+	--button-background-color-muted: transparent !important;
+	--button-background-color-muted-hover: transparent !important;
+	--button-background-color-muted-active: transparent !important;
+	--button-background-color-muted-selected: transparent !important;
+	--button-background-color-muted-disabled: transparent !important;
+	--button-border-color-muted: transparent !important;
+	--button-border-color-muted-hover: transparent !important;
+	--button-border-color-muted-active: transparent !important;
+	--button-border-color-muted-selected: transparent !important;
+	--button-border-color-muted-disabled: transparent !important;
+}
+
+.searchmode-switcher::part(button),
+.searchmode-switcher:is(:hover, :active, [open]) {
+	background: transparent !important;
+	background-color: transparent !important;
+	background-image: none !important;
+	box-shadow: none !important;
+	border-color: transparent !important;
+}
+
+/*
+ * Compact single-row layout
+ *
+ * Navigation stays in the first row. The address bar has a fixed size and
+ * the horizontal tab strip occupies the free centre area. Its right edge is
+ * reserved as a complete region for navigation actions and window controls.
+ */
+:root {
+	--personal-compact-urlbar-width: 218px;
+	--personal-compact-urlbar-height: 30px;
+	--personal-navigation-background: #f2f2f2;
+	--personal-control-background: #ffffff;
+	--personal-inactive-tab-background: #e6e6e6;
+	--personal-inactive-tab-background-hover: #eeeeee;
+	--personal-control-background-hover: #fafafa;
+	--personal-control-background-active: #f5f5f5;
+	--personal-control-border: #e3e3e3;
+	--personal-control-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
+	/* Stable shared colour for the main toolbar glyphs. */
+	--personal-toolbar-icon-color: #1f1f1f;
+	/* Reusable action-button standard. */
+	--personal-action-radius: 10px;
+	--personal-action-primary-background: #0060df;
+	--personal-action-primary-hover: #0250bb;
+	--personal-action-primary-active: #073e9b;
+	--personal-action-primary-text: #ffffff;
+	--personal-action-secondary-background: #f4f4f4;
+	--personal-action-secondary-hover: #e9e9e9;
+	--personal-action-secondary-active: #dddddd;
+	--personal-action-secondary-text: #1f1f1f;
+	--personal-action-secondary-border: #c8c8c8;
+	--personal-action-disabled-background: #e2e2e2;
+	--personal-action-disabled-text: #666666;
+	/* 126 px covers the left controls, margins and the requested 6 px gap.
+	 * Derive the tab start from the live URL-bar width so future resizing does
+	 * not leave an obsolete empty region. */
+	--personal-compact-tabs-left-base: calc(
+		126px + var(--personal-compact-urlbar-width)
+	);
+	--personal-compact-sidebar-slot: 0px;
+	--personal-compact-tabs-left: calc(
+		var(--personal-compact-tabs-left-base) +
+		var(--personal-compact-sidebar-slot)
+	);
+	--personal-compact-fixed-right: 123px;
+	--personal-compact-newtab-slot: 0px;
+	--personal-compact-downloads-slot: 0px;
+	--personal-compact-account-slot: 0px;
+	--personal-compact-extensions-slot: 0px;
+	--personal-compact-tabs-right: calc(
+		var(--personal-compact-fixed-right) +
+		var(--personal-compact-newtab-slot) +
+		var(--personal-compact-downloads-slot) +
+		var(--personal-compact-account-slot) +
+		var(--personal-compact-extensions-slot)
+	);
+	--personal-compact-row-height: 46px;
+}
+
+/* The Sidebar button occupies 36 px plus 2 px on each side while present. */
+:root:has(#nav-bar #sidebar-button:not([hidden])) {
+	--personal-compact-sidebar-slot: 40px;
+}
+
+:root:has(#nav-bar-customization-target #new-tab-button) {
+	--personal-compact-newtab-slot: 36px;
+}
+
+:root:has(#nav-bar-customization-target #downloads-button) {
+	--personal-compact-downloads-slot: 36px;
+}
+
+:root:has(#nav-bar-customization-target #fxa-toolbar-menu-button) {
+	--personal-compact-account-slot: 36px;
+}
+
+:root:has(#nav-bar-customization-target #unified-extensions-button) {
+	--personal-compact-extensions-slot: 36px;
+}
+
+#navigator-toolbox {
+	position: relative !important;
+}
+
+#nav-bar {
+	min-height: var(--personal-compact-row-height) !important;
+	height: var(--personal-compact-row-height) !important;
+	padding-top: 5px !important;
+	padding-bottom: 5px !important;
+	background: var(--personal-navigation-background) !important;
+}
+
+/* Remove the flexible gap between Reload and the address bar. */
+#nav-bar-customization-target > toolbarspring,
+#nav-bar-customization-target > toolbarspacer[flex],
+#nav-bar-customization-target > #customizableui-special-spring1 {
+	display: none !important;
+}
+
+#urlbar-container {
+	flex: 0 0 var(--personal-compact-urlbar-width) !important;
+	width: var(--personal-compact-urlbar-width) !important;
+	min-width: var(--personal-compact-urlbar-width) !important;
+	max-width: var(--personal-compact-urlbar-width) !important;
+}
+
+#urlbar .urlbar-input-container {
+	height: var(--personal-compact-urlbar-height) !important;
+	min-height: var(--personal-compact-urlbar-height) !important;
+	max-height: var(--personal-compact-urlbar-height) !important;
+}
+
+/*
+ * Correct ThemeCore's centred URL text origin.
+ * Resting text occupies the middle half; focus expands it from the left.
+ */
+#urlbar #urlbar-input {
+	left: 10% !important;
+	right: auto !important;
+	width: 80% !important;
+	transform: translateY(-50%) !important;
+	text-align: center !important;
+	transition: left 200ms ease, width 200ms ease !important;
+}
+
+#urlbar[focused] #urlbar-input {
+	left: 0 !important;
+	right: auto !important;
+	width: 100% !important;
+	transform: translateY(-50%) !important;
+	text-align: left !important;
+}
+
+/* Firefox fades the ends of long resting URLs with a mask. Keep the address
+ * text fully sharp; normal clipping still prevents it leaving the field. */
+#urlbar #urlbar-input {
+	mask-image: none !important;
+	filter: none !important;
+	text-shadow: none !important;
+	opacity: 1 !important;
+}
+
+/* The navigation target owns the configurable right-side action group. */
+#nav-bar-customization-target {
+	flex: 1 1 auto !important;
+	-moz-box-flex: 1 !important;
+	min-width: 0 !important;
+	width: 100% !important;
+}
+
+#nav-bar-customization-target > #vertical-spacer {
+	display: none !important;
+}
+
+#nav-bar-customization-target :is(
+	#new-tab-button,
+	#downloads-button,
+	#fxa-toolbar-menu-button,
+	#unified-extensions-button
+) {
+	display: flex !important;
+	visibility: visible !important;
+	opacity: 1 !important;
+	position: fixed !important;
+	width: 36px !important;
+	height: 36px !important;
+	min-width: 36px !important;
+	margin: 0 !important;
+	flex: 0 0 36px !important;
+	z-index: 20 !important;
+}
+
+#nav-bar-customization-target #new-tab-button {
+	top: 5px !important;
+	right: calc(
+		var(--personal-compact-fixed-right) +
+		var(--personal-compact-downloads-slot) +
+		var(--personal-compact-account-slot) +
+		var(--personal-compact-extensions-slot)
+	) !important;
+}
+
+#nav-bar-customization-target #downloads-button {
+	top: 5px !important;
+	right: calc(
+		var(--personal-compact-fixed-right) +
+		var(--personal-compact-account-slot) +
+		var(--personal-compact-extensions-slot)
+	) !important;
+}
+
+#nav-bar-customization-target #fxa-toolbar-menu-button {
+	top: 5px !important;
+	right: calc(
+		var(--personal-compact-fixed-right) +
+		var(--personal-compact-extensions-slot)
+	) !important;
+}
+
+#nav-bar-customization-target #unified-extensions-button {
+	top: 5px !important;
+	right: var(--personal-compact-fixed-right) !important;
+}
+
+/* Keep Firefox's native New Tab geometry, but remove ThemeCore's grey card. */
+:is(#new-tab-button, #tabs-newtab-button) {
+	--gnome-tabbar-tab-background: transparent !important;
+	--gnome-tabbar-tab-hover-background: transparent !important;
+	--toolbarbutton-hover-background: transparent !important;
+	--toolbarbutton-active-background: transparent !important;
+	background: transparent !important;
+	background-color: transparent !important;
+	background-image: none !important;
+	box-shadow: none !important;
+}
+
+:is(#new-tab-button, #tabs-newtab-button):is(:hover, :active, [open]),
+:is(#new-tab-button, #tabs-newtab-button) > .toolbarbutton-icon {
+	border: 0 !important;
+	background: transparent !important;
+	background-color: transparent !important;
+	background-image: none !important;
+	box-shadow: none !important;
+}
+
+/* Overlay the tab strip only in the free centre of the navigation row. */
+#navigator-toolbox > #TabsToolbar {
+	position: absolute !important;
+	top: 5px !important;
+	left: var(--personal-compact-tabs-left) !important;
+	right: var(--personal-compact-tabs-right) !important;
+	width: auto !important;
+	height: 36px !important;
+	min-height: 36px !important;
+	z-index: 3 !important;
+	background: transparent !important;
+	border: 0 !important;
+	box-shadow: none !important;
+}
+
+#navigator-toolbox > #TabsToolbar .toolbar-items,
+#navigator-toolbox > #TabsToolbar #TabsToolbar-customization-target {
+	min-width: 0 !important;
+	width: 100% !important;
+}
+
+#tabbrowser-tabs:not([orient="vertical"]) {
+	min-width: 0 !important;
+}
+
+/* Use softer 12 px corners on horizontal tabs. */
+#tabbrowser-tabs:not([orient="vertical"]) .tab-background {
+	border-radius: 12px !important;
+	background: var(--personal-control-background) !important;
+	background-color: var(--personal-control-background) !important;
+	border: 1px solid var(--personal-control-border) !important;
+	box-shadow: var(--personal-control-shadow) !important;
+}
+
+/* Active tab stays white; inactive tabs are darker for page identification. */
+#tabbrowser-tabs:not([orient="vertical"]) .tabbrowser-tab:not([selected]):not(:hover) > .tab-stack > .tab-background {
+	background-color: var(--personal-inactive-tab-background) !important;
+	background-image: none !important;
+}
+
+#TabsToolbar .tabbrowser-tab:hover > .tab-stack > .tab-background:not([selected]) {
+	background-color: var(--personal-inactive-tab-background-hover) !important;
+	border-color: var(--personal-control-border) !important;
+	box-shadow: var(--personal-control-shadow) !important;
+}
+
+#tabbrowser-tabs:not([orient="vertical"]) .tab-background[selected] {
+	background-color: var(--personal-control-background) !important;
+	border: 1px solid var(--personal-control-border) !important;
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Two adjacent 1.5 px margins create a 3 px gap between tabs. */
+#tabbrowser-tabs:not([orient="vertical"]) .tabbrowser-tab:not([pinned]) {
+	margin-inline: 1.5px !important;
+}
+
+/*
+ * Background-free navigation actions
+ *
+ * Firefox gives these controls different internal boxes and structural gaps,
+ * so keep every navigation action visually clean on the grey toolbar.
+ */
+#nav-bar toolbarbutton:not(.titlebar-button):not(.close-icon):not(#urlbar-zoom-button):not(#hack),
+#nav-bar #PanelUI-menu-button:not(#hack) {
+	background: transparent !important;
+	background-color: transparent !important;
+	background-image: none !important;
+	border-color: transparent !important;
+	box-shadow: none !important;
+}
+
+/* Remove Firefox's separate inner icon cards as well. */
+#nav-bar toolbarbutton:not(.titlebar-button):not(.close-icon):not(#urlbar-zoom-button)
+	:is(.toolbarbutton-icon, .toolbarbutton-badge-stack) {
+	background: transparent !important;
+	background-color: transparent !important;
+	background-image: none !important;
+	border-color: transparent !important;
+	box-shadow: none !important;
+}
+
+/* Keep Downloads, Account, and Extensions on one stable neutral icon colour. */
+:root {
+	--toolbarbutton-icon-fill-attention: var(--personal-toolbar-icon-color) !important;
+}
+
+:is(
+	#downloads-button,
+	#fxa-toolbar-menu-button,
+	#unified-extensions-button
+) {
+	--toolbarbutton-icon-fill: var(--personal-toolbar-icon-color) !important;
+	--toolbarbutton-icon-fill-attention: var(--personal-toolbar-icon-color) !important;
+	--button-icon-fill: var(--personal-toolbar-icon-color) !important;
+	color: var(--personal-toolbar-icon-color) !important;
+}
+
+:is(
+	#downloads-button .toolbarbutton-icon,
+	#downloads-button .toolbarbutton-badge-stack,
+	#fxa-toolbar-menu-button .toolbarbutton-icon,
+	#fxa-toolbar-menu-button .toolbarbutton-badge-stack,
+	#fxa-avatar-image,
+	#unified-extensions-button .toolbarbutton-icon,
+	#unified-extensions-button .toolbarbutton-badge-stack
+) {
+	-moz-context-properties: fill, fill-opacity, stroke !important;
+	color: var(--personal-toolbar-icon-color) !important;
+	fill: var(--personal-toolbar-icon-color) !important;
+	stroke: var(--personal-toolbar-icon-color) !important;
+}
+
+/* Downloads can be restored by Firefox into either the navigation bar or the
+ * TabsToolbar. Remove both native hover layers regardless of its parent:
+ * the square toolbarbutton surface and the round badge-stack surface. Keep
+ * background images intact because Firefox draws progress in those layers. */
+#downloads-button,
+#downloads-button:is(:hover, :active, [open], [attention]) {
+	--toolbarbutton-hover-background: transparent !important;
+	--toolbarbutton-active-background: transparent !important;
+	--toolbarbutton-background-color: transparent !important;
+	--toolbarbutton-background-color-hover: transparent !important;
+	--toolbarbutton-background-color-active: transparent !important;
+	--toolbarbutton-background-color-disabled: transparent !important;
+	--button-background-color: transparent !important;
+	--button-background-color-hover: transparent !important;
+	--button-background-color-active: transparent !important;
+	--button-background-color-ghost: transparent !important;
+	background: transparent !important;
+	background-color: transparent !important;
+	border-color: transparent !important;
+	box-shadow: none !important;
+	outline: none !important;
+}
+
+#downloads-button > .toolbarbutton-badge-stack,
+#downloads-button .toolbarbutton-icon,
+#downloads-button :is(
+	#downloads-indicator-anchor,
+	#downloads-indicator-icon,
+	#downloads-indicator-progress-outer,
+	#downloads-indicator-progress-inner
+) {
+	background-color: transparent !important;
+	border-color: transparent !important;
+	box-shadow: none !important;
+	outline: none !important;
+}
+
+#downloads-button:is(:hover, :active, [open], [attention]) > .toolbarbutton-badge-stack,
+#downloads-button:is(:hover, :active, [open], [attention]) .toolbarbutton-icon,
+#downloads-button:is(:hover, :active, [open], [attention]) #downloads-indicator-anchor {
+	background-color: transparent !important;
+	border-color: transparent !important;
+	box-shadow: none !important;
+}
+
+/* Official-profile placement adds a toolbarpaletteitem wrapper. Keep every
+ * external surface transparent, including all interaction states. */
+#wrapper-downloads-button,
+#wrapper-downloads-button:is(:hover, :active, [open]),
+:is(toolbaritem, toolbarpaletteitem):has(> #downloads-button),
+:is(toolbaritem, toolbarpaletteitem):has(> #downloads-button):is(:hover, :active, [open]) {
+	background: transparent !important;
+	background-color: transparent !important;
+	background-image: none !important;
+	border: 0 !important;
+	box-shadow: none !important;
+	outline: 0 !important;
+}
+
+/* The icon/animation stack itself stays paint-free, exactly like Extensions. */
+#downloads-button > .toolbarbutton-badge-stack,
+#downloads-button:is(:hover, :active, [open], [attention]) > .toolbarbutton-badge-stack,
+#downloads-button #downloads-indicator-anchor,
+#downloads-button #downloads-indicator-icon {
+	background: transparent !important;
+	background-color: transparent !important;
+	border-color: transparent !important;
+	box-shadow: none !important;
+}
+
+#downloads-button #downloads-indicator-icon {
+	-moz-context-properties: fill, fill-opacity, stroke !important;
+	color: var(--personal-toolbar-icon-color) !important;
+	fill: var(--personal-toolbar-icon-color) !important;
+	fill-opacity: 1 !important;
+}
+
+#wrapper-downloads-button::before,
+#wrapper-downloads-button::after,
+#downloads-button::before,
+#downloads-button::after,
+#downloads-button > .toolbarbutton-badge-stack::before,
+#downloads-button > .toolbarbutton-badge-stack::after {
+	content: none !important;
+	background: none !important;
+	box-shadow: none !important;
+}
+
+/*
+ * Sidebar panel selector
+ *
+ * Firefox already paints this menu's native inner surface. Remove only the
+ * second outer card added by ThemeCore's generic menupopup treatment.
+ */
+#sidebarMenu-popup:not(#hack) {
+	/* These variables paint Firefox's own ::part(content) surface. */
+	--panel-background-color: #ffffff !important;
+	--panel-text-color: #1f1f1f !important;
+	--panel-border-color: #d7d7d7 !important;
+	--panel-border-radius: 8px !important;
+	background: #ffffff !important;
+	background-color: #ffffff !important;
+	background-image: none !important;
+	border: 0 !important;
+	border-radius: 8px !important;
+	box-shadow: none !important;
+	padding: 0 !important;
+}
+
+/* Firefox 158 can bypass the host variables for this non-arrow menupopup. */
+#sidebarMenu-popup:not(#hack)::part(content) {
+	background: #ffffff !important;
+	background-color: #ffffff !important;
+	background-image: none !important;
+	color: #1f1f1f !important;
+	border: 1px solid #d7d7d7 !important;
+	border-radius: 8px !important;
+	box-shadow: 0 4px 14px rgba(0, 0, 0, 0.16) !important;
+	padding: 4px 0 !important;
+}
+
+/*
+ * Page context menu
+ *
+ * Use one Firefox-style custom themeface, without ThemeCore's grey outer frame.
+ * Separators retain a little grouping space but no visible horizontal rule.
+ */
+#contentAreaContextMenu:not(#hack) {
+	--panel-background-color: #ffffff !important;
+	--panel-text-color: #1f1f1f !important;
+	--panel-border-color: #d7d7d7 !important;
+	--panel-border-radius: 8px !important;
+	--panel-box-shadow-margin: 0px !important;
+	background: #ffffff !important;
+	background-color: #ffffff !important;
+	background-image: none !important;
+	border: 1px solid #d7d7d7 !important;
+	border-radius: 8px !important;
+	box-shadow: 0 4px 14px rgba(0, 0, 0, 0.16) !important;
+	background-clip: padding-box !important;
+	clip-path: inset(0 round 8px) !important;
+	overflow: clip !important;
+	margin: 0 !important;
+	padding: 0 !important;
+}
+
+#contentAreaContextMenu:not(#hack)::part(content) {
+	background: #ffffff !important;
+	background-color: #ffffff !important;
+	background-image: none !important;
+	color: #1f1f1f !important;
+	border: 0 !important;
+	border-radius: 8px !important;
+	box-shadow: none !important;
+	padding: 4px 0 !important;
+}
+
+#contentAreaContextMenu menuseparator {
+	border: 0 !important;
+	padding-block: 3px !important;
+}
+
+#contentAreaContextMenu menuseparator::before {
+	border-top-color: transparent !important;
+}
+
+/* Match Firefox's flat navigation row: icons only, without a second card. */
+#contentAreaContextMenu #context-navigation {
+	padding: 2px 6px 3px !important;
+}
+
+#contentAreaContextMenu #context-navigation > menuitem:not(#hack) {
+	background: transparent !important;
+	background-color: transparent !important;
+	background-image: none !important;
+	border: 0 !important;
+	border-radius: 4px !important;
+	box-shadow: none !important;
+}
+
+#contentAreaContextMenu #context-navigation > menuitem:not([disabled]):hover {
+	background-color: #f0f0f0 !important;
+}
+
+/*
+ * Unified Firefox popup style
+ *
+ * Match icon menus, arrow panels, and ordinary menu popups to the cleaned
+ * page context menu. Tooltips stay untouched.
+ */
+:root :is(
+	menupopup,
+	panel[type="arrow"]:not(.tooltip-xul-wrapper),
+	.searchmode-switcher-panel
+) {
+	--panel-background-color: #ffffff !important;
+	--panel-text-color: #1f1f1f !important;
+	--panel-border-color: #d7d7d7 !important;
+	--panel-border-radius: 8px !important;
+	color: #1f1f1f !important;
+}
+
+/* XUL menu popups use their host as a fallback painting surface. */
+:root menupopup:not(#hack) {
+	background: #ffffff !important;
+	background-color: #ffffff !important;
+	background-image: none !important;
+	border: 1px solid #d7d7d7 !important;
+	border-radius: 8px !important;
+	box-shadow: 0 4px 14px rgba(0, 0, 0, 0.16) !important;
+	padding: 0 !important;
+}
+
+:root menupopup:not(#hack)::part(content) {
+	background: #ffffff !important;
+	background-color: #ffffff !important;
+	background-image: none !important;
+	color: #1f1f1f !important;
+	border: 0 !important;
+	border-radius: 8px !important;
+	box-shadow: none !important;
+	padding: 4px 0 !important;
+}
+
+/* Bookmark-folder previews already have a native inner content surface.
+ * Do not paint the menupopup host too, otherwise it becomes a card inside a
+ * second card. Keep one standard Firefox-style surface only. */
+#PlacesToolbar menupopup[placespopup="true"]:not(#hack) {
+	--panel-background-color: #ffffff !important;
+	--panel-text-color: #1f1f1f !important;
+	--panel-border-color: #d7d7d7 !important;
+	--panel-border-radius: 8px !important;
+	--panel-box-shadow-margin: 0px !important;
+	background: #ffffff !important;
+	background-color: #ffffff !important;
+	background-image: none !important;
+	border: 1px solid #d7d7d7 !important;
+	border-radius: 8px !important;
+	box-shadow: 0 4px 14px rgba(0, 0, 0, 0.16) !important;
+	background-clip: padding-box !important;
+	clip-path: inset(0 round 8px) !important;
+	overflow: clip !important;
+	margin: 0 !important;
+	padding: 0 !important;
+}
+
+#PlacesToolbar menupopup[placespopup="true"]:not(#hack)::part(content) {
+	background: #ffffff !important;
+	background-color: #ffffff !important;
+	background-image: none !important;
+	color: #1f1f1f !important;
+	border: 0 !important;
+	border-radius: 8px !important;
+	box-shadow: none !important;
+	padding: 4px 0 !important;
+}
+
+#PlacesToolbar menupopup[placespopup="true"]::part(arrowscrollbox) {
+	background: transparent !important;
+	border: 0 !important;
+	box-shadow: none !important;
+}
+
+/* Panels opened by toolbar icons keep their native arrow and one card. */
+:root panel[type="arrow"]:not(.tooltip-xul-wrapper)::part(content),
+:root .searchmode-switcher-panel::part(content) {
+	background: #ffffff !important;
+	background-color: #ffffff !important;
+	background-image: none !important;
+	color: #1f1f1f !important;
+	border: 1px solid #d7d7d7 !important;
+	border-radius: 8px !important;
+	box-shadow: 0 4px 14px rgba(0, 0, 0, 0.16) !important;
+}
+
+/* Keep group spacing while removing separator rules everywhere. */
+:root menupopup menuseparator::before {
+	border-top-color: transparent !important;
+}
+
+:root panel[type="arrow"]:not(.tooltip-xul-wrapper) toolbarseparator {
+	border-color: transparent !important;
+	background: transparent !important;
+}
+
+/* Hide only the application menu's scrollbar artwork; scrolling still works. */
+#appMenu-popup :is(.panel-subview-body, .panel-viewcontainer, .panel-viewstack) {
+	scrollbar-width: none !important;
+	scrollbar-color: transparent transparent !important;
+}
+
+/* Remove the coloured border from every native Sign In button state. */
+:is(
+	#appMenu-nova-fxa-label,
+	#appMenu-fxa-signed-out-sign-in-button,
+	#PanelUI-fxa-menu-signed-out-sign-in-button,
+	#PanelUI-fxa-menu-sign-in-promo-button
+) {
+	--button-border-color: transparent !important;
+	--button-border-color-hover: transparent !important;
+	--button-border-color-active: transparent !important;
+	--button-border-color-primary: transparent !important;
+	--button-border-color-primary-hover: transparent !important;
+	--button-border-color-primary-active: transparent !important;
+	border-color: transparent !important;
+	box-shadow: none !important;
+}
+
+:is(
+	#appMenu-nova-fxa-label,
+	#appMenu-fxa-signed-out-sign-in-button,
+	#PanelUI-fxa-menu-signed-out-sign-in-button,
+	#PanelUI-fxa-menu-sign-in-promo-button
+)::part(button) {
+	border-color: transparent !important;
+	box-shadow: none !important;
+}
+
+/*
+ * Full-page Translations panel
+ * Restore Firefox's current spacing and force readable control colours over
+ * the older ThemeCore button tokens.
+ */
+#full-page-translations-panel {
+	--panel-background-color: #ffffff !important;
+	--panel-text-color: #1f1f1f !important;
+	--button-text-color: #1f1f1f !important;
+	--button-text-color-hover: #1f1f1f !important;
+	--button-text-color-active: #1f1f1f !important;
+	color: #1f1f1f !important;
+}
+
+#full-page-translations-panel .translations-panel-header {
+	display: flex !important;
+	align-items: flex-start !important;
+	gap: 10px !important;
+	padding: 14px 16px 0 !important;
+	color: #1f1f1f !important;
+}
+
+#full-page-translations-panel .translations-panel-header-wrapper,
+#full-page-translations-panel .translations-panel-header > h1 {
+	flex: 1 1 auto !important;
+	min-width: 0 !important;
+	margin: 0 !important;
+	padding: 0 !important;
+	font-size: 13px !important;
+	font-weight: 600 !important;
+	line-height: 1.4 !important;
+	color: #1f1f1f !important;
+}
+
+#full-page-translations-panel .translations-panel-content {
+	padding: 14px 16px 10px !important;
+	font-size: 13px !important;
+	line-height: 1.45 !important;
+	color: #1f1f1f !important;
+}
+
+#full-page-translations-panel #full-page-translations-panel-intro {
+	margin-block-end: 12px !important;
+	line-height: 1.45 !important;
+}
+
+#full-page-translations-panel :is(
+	#full-page-translations-panel-from,
+	#full-page-translations-panel-to
+) {
+	background: #f7f7f7 !important;
+	color: #1f1f1f !important;
+	border-color: #b8b8b8 !important;
+}
+
+#full-page-translations-panel .translations-panel-footer {
+	gap: 8px !important;
+	padding: 10px 16px 14px !important;
+}
+
+#full-page-translations-panel #full-page-translations-panel-cancel:not(#hack) {
+	background: var(--personal-action-secondary-background) !important;
+	color: var(--personal-action-secondary-text) !important;
+	border: 1px solid var(--personal-action-secondary-border) !important;
+	border-radius: var(--personal-action-radius) !important;
+	box-shadow: none !important;
+}
+
+#full-page-translations-panel #full-page-translations-panel-cancel:not(#hack):hover {
+	background: var(--personal-action-secondary-hover) !important;
+}
+
+#full-page-translations-panel #full-page-translations-panel-translate:not(#hack) {
+	background: var(--personal-action-primary-background) !important;
+	color: var(--personal-action-primary-text) !important;
+	border: 1px solid var(--personal-action-primary-background) !important;
+	border-radius: var(--personal-action-radius) !important;
+	box-shadow: none !important;
+}
+
+#full-page-translations-panel #full-page-translations-panel-translate:not(#hack):not([disabled]):hover {
+	background: var(--personal-action-primary-hover) !important;
+	border-color: var(--personal-action-primary-hover) !important;
+}
+
+#full-page-translations-panel #full-page-translations-panel-translate:not(#hack):not([disabled]):active {
+	background: var(--personal-action-primary-active) !important;
+	border-color: var(--personal-action-primary-active) !important;
+}
+
+#full-page-translations-panel #full-page-translations-panel-translate:not(#hack)[disabled] {
+	background: var(--personal-action-disabled-background) !important;
+	color: var(--personal-action-disabled-text) !important;
+	border-color: var(--personal-action-secondary-border) !important;
+	opacity: 1 !important;
+}
+
+/*
+ * Shared action buttons for current and future Firefox panels.
+ * Default/primary actions confirm; cancel/dismiss and other footer actions are
+ * neutral. Specific components can consume the same variables above.
+ */
+panel .panel-footer > button,
+panel .panel-footer button.footer-button,
+panel button:is([dlgtype="cancel"], [id*="cancel"], [id*="dismiss"]) {
+	background: var(--personal-action-secondary-background) !important;
+	color: var(--personal-action-secondary-text) !important;
+	border: 1px solid var(--personal-action-secondary-border) !important;
+	border-radius: var(--personal-action-radius) !important;
+	box-shadow: none !important;
+}
+
+panel .panel-footer > button:hover,
+panel .panel-footer button.footer-button:hover,
+panel button:is([dlgtype="cancel"], [id*="cancel"], [id*="dismiss"]):hover {
+	background: var(--personal-action-secondary-hover) !important;
+}
+
+panel :is(
+	.panel-footer > button[default="true"],
+	.panel-footer button.footer-button[default="true"],
+	button[dlgtype="accept"],
+	button[default="true"]
+) {
+	background: var(--personal-action-primary-background) !important;
+	color: var(--personal-action-primary-text) !important;
+	border: 1px solid var(--personal-action-primary-background) !important;
+	border-radius: var(--personal-action-radius) !important;
+	box-shadow: none !important;
+}
+
+panel :is(
+	.panel-footer > button[default="true"],
+	.panel-footer button.footer-button[default="true"],
+	button[dlgtype="accept"],
+	button[default="true"]
+):not([disabled]):hover {
+	background: var(--personal-action-primary-hover) !important;
+	border-color: var(--personal-action-primary-hover) !important;
+}
+
+panel :is(
+	.panel-footer > button[default="true"],
+	.panel-footer button.footer-button[default="true"],
+	button[dlgtype="accept"],
+	button[default="true"]
+)[disabled] {
+	background: var(--personal-action-disabled-background) !important;
+	color: var(--personal-action-disabled-text) !important;
+	border-color: var(--personal-action-secondary-border) !important;
+	opacity: 1 !important;
+}
+
+/* Modern moz-button confirmations use their shadow-DOM button part. */
+panel moz-button[type="primary"] {
+	--button-background-color-primary: var(--personal-action-primary-background) !important;
+	--button-background-color-primary-hover: var(--personal-action-primary-hover) !important;
+	--button-background-color-primary-active: var(--personal-action-primary-active) !important;
+	--button-text-color-primary: var(--personal-action-primary-text) !important;
+	--button-border-color-primary: var(--personal-action-primary-background) !important;
+}
+
+panel moz-button[type="primary"]::part(button) {
+	border-radius: var(--personal-action-radius) !important;
+}
+
+/*
+ * App menu zoom controls
+ * Minimal row: only the native icons and the current percentage remain visible.
+ */
+#appMenu-popup #appMenu-zoom-controls {
+	align-items: center !important;
+	gap: 5px !important;
+	background: transparent !important;
+	border: 0 !important;
+	box-shadow: none !important;
+}
+
+#appMenu-popup #appMenu-zoom-controls toolbarbutton:not(#appMenu-fxa-label2) {
+	-moz-appearance: none !important;
+	box-sizing: border-box !important;
+	width: 24px !important;
+	min-width: 24px !important;
+	max-width: 24px !important;
+	height: 24px !important;
+	min-height: 24px !important;
+	max-height: 24px !important;
+	margin: 0 !important;
+	padding: 4px !important;
+	background: transparent !important;
+	border: 0 !important;
+	border-radius: 0 !important;
+	box-shadow: none !important;
+}
+
+#appMenu-popup #appMenu-zoom-controls:is(:hover, :active, [open]),
+#appMenu-popup #appMenu-zoom-controls toolbarbutton:not(#appMenu-fxa-label2):is(:hover, :active, [open]) {
+	background: transparent !important;
+	border-color: transparent !important;
+	box-shadow: none !important;
+}
+
+#appMenu-popup #appMenu-zoom-controls toolbarbutton:not(#appMenu-fxa-label2) > .toolbarbutton-icon {
+	width: 14px !important;
+	height: 14px !important;
+	margin: 0 !important;
+	padding: 0 !important;
+	background: transparent !important;
+	border: 0 !important;
+	border-radius: 0 !important;
+	box-shadow: none !important;
+}
+
+#appMenu-popup #appMenu-zoom-controls :is(
+	#appMenu-zoomReduce-button2,
+	#appMenu-zoomEnlarge-button2
+) > .toolbarbutton-icon {
+	color: #1f1f1f !important;
+	fill: currentColor !important;
+	stroke: transparent !important;
+}
+
+#appMenu-popup #appMenu-zoomReset-button2 > .toolbarbutton-text {
+	margin: 0 !important;
+	padding: 0 !important;
+	background: transparent !important;
+	border: 0 !important;
+	border-radius: 0 !important;
+	box-shadow: none !important;
+	color: #1f1f1f !important;
+}
+
+#appMenu-popup #appMenu-zoomReset-button2:not(#appMenu-fxa-label2):not(#hack) {
+	width: auto !important;
+	min-width: 40px !important;
+	max-width: none !important;
+	padding-inline: 2px !important;
+	color: #1f1f1f !important;
+	text-align: center !important;
+}
+
+#appMenu-popup #appMenu-zoom-controls toolbarseparator {
+	display: none !important;
+}
+
+/*
+ * Password/permission notification actions (Firefox 158 moz-button).
+ * Keep the custom-element host transparent and draw the complete visual on
+ * its shadow parts, preventing ThemeCore's white hover layer from showing.
+ */
+moz-button:is(
+	.popup-notification-primary-button,
+	.popup-notification-secondary-button
+) {
+	--focus-outline: none !important;
+	--focus-outline-offset: 0 !important;
+	margin: 0 !important;
+	padding: 0 !important;
+	background: transparent !important;
+	border: 0 !important;
+	outline: none !important;
+	box-shadow: none !important;
+	text-shadow: none !important;
+}
+
+popupnotification > moz-button-group.panel-footer {
+	--space-small: 0px !important;
+	column-gap: 3px !important;
+	margin-block-start: 8px !important;
+}
+
+moz-button.popup-notification-primary-button {
+	--button-background-color-primary: var(--personal-action-primary-background) !important;
+	--button-background-color-primary-hover: var(--personal-action-primary-hover) !important;
+	--button-background-color-primary-active: var(--personal-action-primary-active) !important;
+	--button-background-color-primary-selected: var(--personal-action-primary-active) !important;
+	--button-background-color-primary-disabled: var(--personal-action-disabled-background) !important;
+	--button-text-color-primary: var(--personal-action-primary-text) !important;
+	--button-text-color-primary-hover: var(--personal-action-primary-text) !important;
+	--button-text-color-primary-active: var(--personal-action-primary-text) !important;
+	--button-text-color-primary-selected: var(--personal-action-primary-text) !important;
+	--button-text-color-primary-disabled: var(--personal-action-disabled-text) !important;
+	--button-border-color-primary: var(--personal-action-primary-background) !important;
+	--button-border-color-primary-hover: var(--personal-action-primary-hover) !important;
+	--button-border-color-primary-active: var(--personal-action-primary-active) !important;
+	--button-border-color-primary-selected: var(--personal-action-primary-active) !important;
+	--button-border-color-primary-disabled: var(--personal-action-secondary-border) !important;
+}
+
+moz-button.popup-notification-primary-button::part(button) {
+	background: var(--personal-action-primary-background) !important;
+	color: var(--personal-action-primary-text) !important;
+	border: 1px solid var(--personal-action-primary-background) !important;
+	border-radius: var(--personal-action-radius) !important;
+	box-shadow: none !important;
+	text-shadow: none !important;
+}
+
+moz-button.popup-notification-primary-button:hover::part(button) {
+	background: var(--personal-action-primary-hover) !important;
+	color: var(--personal-action-primary-text) !important;
+	border-color: var(--personal-action-primary-hover) !important;
+}
+
+moz-button.popup-notification-primary-button:active::part(button) {
+	background: var(--personal-action-primary-active) !important;
+	color: var(--personal-action-primary-text) !important;
+	border-color: var(--personal-action-primary-active) !important;
+}
+
+moz-button.popup-notification-secondary-button {
+	--button-border: 1px solid var(--personal-action-secondary-border) !important;
+	--button-gap-split: 0px !important;
+	--button-border-width-split: 0px !important;
+	--button-split-separator-background-color: var(--personal-action-secondary-border) !important;
+	--button-background-color: var(--personal-action-secondary-background) !important;
+	--button-background-color-hover: var(--personal-action-secondary-hover) !important;
+	--button-background-color-active: var(--personal-action-secondary-active) !important;
+	--button-background-color-selected: var(--personal-action-secondary-active) !important;
+	--button-text-color: var(--personal-action-secondary-text) !important;
+	--button-text-color-hover: var(--personal-action-secondary-text) !important;
+	--button-text-color-active: var(--personal-action-secondary-text) !important;
+	--button-text-color-selected: var(--personal-action-secondary-text) !important;
+	--button-border-color: var(--personal-action-secondary-border) !important;
+	--button-border-color-hover: var(--personal-action-secondary-border) !important;
+	--button-border-color-active: var(--personal-action-secondary-border) !important;
+	--button-border-color-selected: var(--personal-action-secondary-border) !important;
+}
+
+moz-button.popup-notification-secondary-button::part(button),
+moz-button.popup-notification-secondary-button::part(chevron-button) {
+	background: var(--personal-action-secondary-background) !important;
+	color: var(--personal-action-secondary-text) !important;
+	border: 1px solid var(--personal-action-secondary-border) !important;
+	outline: none !important;
+	box-shadow: none !important;
+	text-shadow: none !important;
+}
+
+moz-button.popup-notification-secondary-button::part(button) {
+	border-inline-end: 0 !important;
+	border-radius: var(--personal-action-radius) 0 0 var(--personal-action-radius) !important;
+}
+
+moz-button.popup-notification-secondary-button::part(chevron-button) {
+	border-inline-start: 0 !important;
+	border-radius: 0 var(--personal-action-radius) var(--personal-action-radius) 0 !important;
+}
+
+moz-button.popup-notification-secondary-button:hover::part(button),
+moz-button.popup-notification-secondary-button:hover::part(chevron-button) {
+	background: var(--personal-action-secondary-hover) !important;
+	color: var(--personal-action-secondary-text) !important;
+}
+
+moz-button.popup-notification-secondary-button:active::part(button),
+moz-button.popup-notification-secondary-button:active::part(chevron-button) {
+	background: var(--personal-action-secondary-active) !important;
+	color: var(--personal-action-secondary-text) !important;
+}
+
+/*
+ * Downloads panel
+ * Its toolbar anchor is part of the fixed right-side action group above, so
+ * Firefox's native bottom-right placement keeps the popup on the right.
+ */
+#downloadsPanel-mainView .download-state .downloadButton,
+#downloadsPanel-mainView .download-state .downloadButton:is(:hover, :active, [open]) {
+	-moz-appearance: none !important;
+	background: transparent !important;
+	background-color: transparent !important;
+	background-image: none !important;
+	border: 0 !important;
+	border-radius: 0 !important;
+	box-shadow: none !important;
+	outline: none !important;
+}
+
+#downloadsPanel-mainView .download-state .downloadButton :is(
+	.button-box,
+	.toolbarbutton-icon
+) {
+	background: transparent !important;
+	background-color: transparent !important;
+	background-image: none !important;
+	border: 0 !important;
+	border-radius: 0 !important;
+	box-shadow: none !important;
+}
+
+#downloadsHistory:not(#hack) {
+	background: var(--personal-control-background) !important;
+	color: var(--personal-action-secondary-text) !important;
+	border: 1px solid var(--personal-control-border) !important;
+	border-radius: var(--personal-action-radius) !important;
+	box-shadow: var(--personal-control-shadow) !important;
+	text-shadow: none !important;
+	text-align: center !important;
+}
+
+#downloadsHistory:not(#hack):hover {
+	background: var(--personal-control-background-hover) !important;
+	color: var(--personal-action-secondary-text) !important;
+	border-color: var(--personal-control-border) !important;
+}
+
+#downloadsHistory:not(#hack):active {
+	background: var(--personal-control-background-active) !important;
+	color: var(--personal-action-secondary-text) !important;
+	border-color: var(--personal-control-border) !important;
+}
+
+#downloadsHistory > .button-box {
+	background: transparent !important;
+	border: 0 !important;
+	box-shadow: none !important;
+}
+
+/* Library: keep Firefox's native moz-input-search and remove ThemeCore's outer card. */
+@-moz-document url("chrome://browser/content/places/places.xhtml") {
+	#searchFilter {
+		background: transparent !important;
+		background-color: transparent !important;
+		background-image: none !important;
+		border: 0 !important;
+		border-radius: 0 !important;
+		box-shadow: none !important;
+		outline: none !important;
+		padding: 0 !important;
+	}
+
+	#searchFilter:focus-within {
+		background: transparent !important;
+		border: 0 !important;
+		box-shadow: none !important;
+		outline: none !important;
+	}
+}
+
+/*
+ * Navigation icon motion
+ * Animate only artwork so click targets and the compact layout never move.
+ */
+@media (prefers-reduced-motion: no-preference) {
+	:is(
+		#nav-bar toolbarbutton:not(.titlebar-button):not(.close-icon),
+		#tabs-newtab-button
+	) > :is(.toolbarbutton-icon, .toolbarbutton-badge-stack),
+	#fxa-avatar-image {
+		transform: translateY(0) scale(1) !important;
+		transform-origin: center !important;
+		transition: transform 160ms cubic-bezier(0.2, 0.8, 0.2, 1) !important;
+	}
+
+	:is(
+		#nav-bar toolbarbutton:not(.titlebar-button):not(.close-icon),
+		#tabs-newtab-button
+	):hover > :is(.toolbarbutton-icon, .toolbarbutton-badge-stack),
+	#fxa-toolbar-menu-button:hover #fxa-avatar-image {
+		transform: translateY(-1px) scale(1.08) !important;
+	}
+
+	:is(
+		#nav-bar toolbarbutton:not(.titlebar-button):not(.close-icon),
+		#tabs-newtab-button
+	):active > :is(.toolbarbutton-icon, .toolbarbutton-badge-stack),
+	#fxa-toolbar-menu-button:active #fxa-avatar-image {
+		transform: translateY(0) scale(0.92) !important;
+		transition-duration: 80ms !important;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	:is(
+		#nav-bar toolbarbutton:not(.titlebar-button):not(.close-icon),
+		#tabs-newtab-button
+	) > :is(.toolbarbutton-icon, .toolbarbutton-badge-stack),
+	#fxa-avatar-image {
+		transition: none !important;
+		transform: none !important;
+	}
+}
+
+/* Final Downloads surface override.
+ * ThemeCore paints every .toolbarbutton-1 placed in TabsToolbar with the tab
+ * background. The official profile stores Downloads there, so that rule was
+ * the grey square visible around the icon. Two IDs deliberately outrank it. */
+#TabsToolbar #downloads-button.toolbarbutton-1,
+#TabsToolbar #downloads-button.toolbarbutton-1:not(:active):not([open]):hover,
+#TabsToolbar #downloads-button.toolbarbutton-1:is(:active, [open], [attention]) {
+	--toolbarbutton-background-color: transparent !important;
+	--toolbarbutton-background-color-hover: transparent !important;
+	--toolbarbutton-background-color-active: transparent !important;
+	background: transparent !important;
+	background-color: transparent !important;
+	background-image: none !important;
+	border-color: transparent !important;
+	box-shadow: none !important;
+	outline: 0 !important;
+}
+
+#TabsToolbar #downloads-button.toolbarbutton-1 > .toolbarbutton-badge-stack,
+#TabsToolbar #downloads-button.toolbarbutton-1:is(:hover, :active, [open], [attention])
+	> .toolbarbutton-badge-stack {
+	background-color: transparent !important;
+	border-color: transparent !important;
+	box-shadow: none !important;
+	outline: 0 !important;
+}
+
+/* Vertically centre bookmark items without changing their horizontal flow. */
+#PersonalToolbar {
+	box-sizing: border-box !important;
+	padding: 2px 4px !important;
+	align-items: center !important;
+}
+
+#PersonalToolbar :is(
+	#personal-bookmarks,
+	#PlacesToolbar,
+	#PlacesToolbarItems
+) {
+	height: 100% !important;
+	align-items: center !important;
+	align-content: center !important;
+}
+
+#PersonalToolbar toolbarbutton.bookmark-item {
+	align-self: center !important;
+	margin-block: 0 !important;
+}
+
+/* Custom folder artwork supplied for bookmark folders. */
+.bookmark-item[container] :is(.toolbarbutton-icon, .menu-iconic-icon) {
+	-moz-context-properties: fill !important;
+	fill: #888888 !important;
+	filter: none !important;
+}

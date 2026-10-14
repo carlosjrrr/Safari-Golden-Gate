@@ -1,0 +1,71 @@
+@import "parts/toolbox.css";
+@import "parts/buttons.css";
+@import "parts/entries.css";
+@import "parts/headerbar.css";
+@import "parts/csd.css";
+@import "parts/titlebutton-light.css";
+@import "parts/titlebutton-dark.css";
+@import "parts/popups.css";
+@import "parts/panels.css";
+@import "parts/downloads.css";
+@import "parts/places.css";
+@import "parts/devtools.css";
+@import "parts/tabsbar.css";
+@import "parts/vertical-tabs.css";
+@import "parts/findbar.css";
+@import "parts/scrollbars.css";
+@import "parts/remove-white-flash.css";
+@import "parts/custom-icons.css";
+@import "parts/icons.css";
+@import "colors/light.css";
+@import "colors/dark.css";
+@import "parts/windows.css";
+@import "parts/private-window.css";
+@import "parts/linux.css";
+/* Add Custom themes so user only needs to copy items*/
+@import "custom/tabs-swapclose.css";
+@import "custom/singletabhidden.css";
+@import "custom/hideextension.css";
+@import "custom/enabletabview.css";
+@import "custom/noidentity.css";
+@import "custom/standard-urlbar.css";
+@import "custom/windows-swapclose.css";
+@import "custom/compact-tabs.css";
+@import "custom/highlight-tab.css";
+/* Colour themes (-t flag installs exactly one of these) */
+@import "custom/theme-dracula.css";
+@import "custom/theme-catppuccin-latte.css";
+@import "custom/theme-catppuccin-frappe.css";
+@import "custom/theme-catppuccin-macchiato.css";
+@import "custom/theme-catppuccin-mocha.css";
+@import "custom/theme-nord.css";
+@import "custom/theme-gruvbox-dark.css";
+@import "custom/theme-gruvbox-light.css";
+@import "custom/theme-solarized-dark.css";
+@import "custom/theme-solarized-light.css";
+@import "custom/theme-tokyonight.css";
+@import "custom/theme-material-ocean.css";
+@import "custom/theme-material-palenight.css";
+@import "custom/theme-one-dark.css";
+@import "custom/theme-rose-pine.css";
+@import "custom/theme-everforest-dark.css";
+@import "custom/theme-ayu-mirage.css";
+@import "custom/theme-night-owl.css";
+@import "custom/theme-github-dark.css";
+@import "custom/theme-monokai-pro.css";
+
+/* After every palette: it re-derives two inactive-window colours the palettes
+ * all set too faint, so it has to come later than they do. */
+@import "parts/inactive-window.css";
+/* Increase contrast. Last, so it can override the palette that was just
+ * loaded: automatic under the OS setting, and unconditional when install.sh -i
+ * copied the opt-in sheet into the profile. */
+@import "parts/contrast.css";
+@import "custom/increase-contrast.css";
+@namespace xul "http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul";
+
+/* Set theme version text in customization panel */
+#customization-footer::before {
+	content: "Firefox Custom Theme";
+	padding: 9px;
+}
